@@ -1,0 +1,40 @@
+version: "4"
+
+services:
+
+  collector_service:
+    build: ./collector_service
+    ports:
+      - "5001:5001"
+    networks:
+      - red_sensores
+    depends_on:
+      - storage_service
+      - alert_service
+
+  alert_service:
+    build: ./alert_service
+    ports:
+      - "5003:5003"
+    networks:
+      - red_sensores
+
+  sensor_service:
+    build: ./sensor_service
+    ports:
+      - "5000:5000"
+    networks:
+      - red_sensores
+    depends_on:
+      - collector_service
+
+  storage_service:
+    build: ./storage_service
+    ports:
+      - "5002:5002"
+    networks:
+      - red_sensores
+
+networks:
+  red_sensores:
+    driver: bridge
